@@ -1,6 +1,7 @@
 package com.example.santanderavaliacaospring.controller;
 
 import com.example.santanderavaliacaospring.DTO.RequestRebel;
+import com.example.santanderavaliacaospring.DTO.RequestReport;
 import com.example.santanderavaliacaospring.DTO.ResponseRebel;
 import com.example.santanderavaliacaospring.SantanderAvaliacaoSpringApplication;
 import com.example.santanderavaliacaospring.models.Rebel;
@@ -38,6 +39,15 @@ public class RebelController {
         return ResponseEntity.created(uri).body(new ResponseRebel(rebel));
     }
 
+    @PostMapping("/{id}/report")
+    public ResponseEntity<ResponseRebel> reportRebel(
+            @PathVariable UUID id,
+            @RequestBody RequestReport requestReport
+    ) throws Exception {
+        Rebel rebel = SantanderAvaliacaoSpringApplication.resistance.reportRebel(id, requestReport.getWhistleblowerId());
+        return ResponseEntity.ok(new ResponseRebel(rebel));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ResponseRebel> rebelDetails(@PathVariable UUID id)
             throws Exception{
@@ -50,15 +60,6 @@ public class RebelController {
             @RequestBody RequestRebel requestRebel
     ) throws Exception {
         Rebel rebel = SantanderAvaliacaoSpringApplication.resistance.updateRebelData(id, requestRebel);
-        return ResponseEntity.ok(new ResponseRebel(rebel));
-    }
-
-    @PutMapping("/{id}/report")
-    public ResponseEntity<ResponseRebel> reportRebel(
-            @PathVariable UUID id,
-            @RequestBody UUID whistleblowerId
-    ) throws Exception {
-        Rebel rebel = SantanderAvaliacaoSpringApplication.resistance.reportRebel(id, whistleblowerId);
         return ResponseEntity.ok(new ResponseRebel(rebel));
     }
 

@@ -24,6 +24,16 @@ public class Resistance {
         return result;
     }
 
+    public static Rebel findAnyById(UUID id) throws Exception {
+        Optional<Rebel> result = Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),id)).findAny();
+
+        if (result.isPresent()){
+            return result.get();
+        } else {
+            throw new Exception("Rebel not found");
+        }
+    }
+
     public Rebel rebelDetails(UUID id) throws Exception {
         Optional<Rebel> resultRebel =
                 Resistance.listMembers().stream().filter(rebel -> Objects.equals(rebel.getId(),id)).findAny();
@@ -81,16 +91,18 @@ public class Resistance {
     public Rebel reportRebel(UUID traitorId, UUID whistleblowerId) throws Exception {
         Optional<Rebel> resultWhistleblower =
                 Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),whistleblowerId)).findAny();
-        if(!resultWhistleblower.isPresent()){
+        if(resultWhistleblower.isEmpty()){
             throw new Exception("Whistleblower not found");
         }
 
+
+        int traitorIndex;
         Optional<Rebel> resultTraitor =
                 Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),traitorId)).findAny();
         if(resultTraitor.isPresent()){
             List<UUID> newList = resultTraitor.get().getReports();
             newList.add(whistleblowerId);
-            Resistance.rebels.set(Resistance.rebels.indexOf(resultTraitor),
+            Resistance.rebels.set(Resistance.rebels.indexOf(findAnyById(traitorId)),
                     new Rebel(
                             resultTraitor.get().getId(),
                             resultTraitor.get().getName(),

@@ -21,7 +21,6 @@ public class ResponseRebel {
     private String gender;
     private RebelLocation location;
     private List<OwnedItem> inventory;
-    private boolean isTraitor;
     private List<UUID> reports;
 
     public ResponseRebel(Rebel rebel){
