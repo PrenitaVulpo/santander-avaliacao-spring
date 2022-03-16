@@ -1,5 +1,8 @@
 package com.example.santanderavaliacaospring.models;
 
+import com.example.santanderavaliacaospring.DTO.RequestInventory;
+import com.example.santanderavaliacaospring.DTO.RequestRebel;
+
 import java.util.*;
 
 public class Resistance {
@@ -65,5 +68,33 @@ public class Resistance {
     public void deleteRebel(UUID id) throws Exception{
         Rebel rebel = rebelDetails(id);
         Resistance.rebels.remove(rebel);
+    }
+
+    public void reportRebel(UUID traitorId, UUID whistleblowerId) throws Exception {
+        Optional<Rebel> resultWhistleblower =
+                Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),whistleblowerId)).findAny();
+        if(!resultWhistleblower.isPresent()){
+            throw new Exception("Whistleblower not found");
+        }
+
+        Optional<Rebel> resultTraitor =
+                Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),traitorId)).findAny();
+        if(resultTraitor.isPresent()){
+            List<UUID> newList = resultTraitor.get().getReports();
+            newList.add(whistleblowerId);
+            Resistance.rebels.set(Resistance.rebels.indexOf(resultTraitor),
+                    new Rebel(
+                            resultTraitor.get().getId(),
+                            resultTraitor.get().getName(),
+                            resultTraitor.get().getAge(),
+                            resultTraitor.get().getGender(),
+                            resultTraitor.get().getLocation(),
+                            resultTraitor.get().getInventory(),
+                            newList
+                    )
+                    );
+        } else {
+            throw new Exception("Traitor not found");
+        }
     }
 }

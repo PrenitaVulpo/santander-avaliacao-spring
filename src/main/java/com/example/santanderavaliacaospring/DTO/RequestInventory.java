@@ -2,15 +2,14 @@ package com.example.santanderavaliacaospring.DTO;
 
 import com.example.santanderavaliacaospring.models.Item;
 import com.example.santanderavaliacaospring.models.OwnedItem;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class RequestInventory {
     private List<RequestItem> itemList;
 

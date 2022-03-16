@@ -16,6 +16,5 @@ public class Rebel {
     private String gender;
     private RebelLocation location;
     private List<OwnedItem> inventory;
-    private boolean isTraitor;
-    private int numberOfReports;
+    private List<UUID> reports;
 }
