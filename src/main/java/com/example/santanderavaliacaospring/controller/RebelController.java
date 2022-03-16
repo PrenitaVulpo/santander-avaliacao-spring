@@ -1,8 +1,6 @@
 package com.example.santanderavaliacaospring.controller;
 
-import com.example.santanderavaliacaospring.DTO.RequestRebel;
-import com.example.santanderavaliacaospring.DTO.RequestReport;
-import com.example.santanderavaliacaospring.DTO.ResponseRebel;
+import com.example.santanderavaliacaospring.DTO.*;
 import com.example.santanderavaliacaospring.SantanderAvaliacaoSpringApplication;
 import com.example.santanderavaliacaospring.models.Rebel;
 import com.example.santanderavaliacaospring.service.RebelService;
@@ -26,6 +24,26 @@ public class RebelController {
     @GetMapping
     public List<ResponseRebel> rebels(){
         return ResponseRebel.toResponse(rebelService.getAllRebels());
+    }
+
+    @GetMapping("/reports/traitors")
+    public ResponsePercentage getTraitorPercentage() throws Exception {
+        return rebelService.getTraitorPercentage();
+    }
+
+    @GetMapping("/reports/members")
+    public ResponsePercentage getNonTraitorPercentage() {
+        return rebelService.getNonTraitorPercentage();
+    }
+
+    @GetMapping("/reports/lost-points")
+    public ResponseLostPoints getLostPoints() throws Exception {
+        return rebelService.getLostPoints();
+    }
+
+    @GetMapping("/reports/items-report")
+    public ResponseItemsReport getItemsReport() throws Exception {
+        return rebelService.getItemsReport();
     }
 
     @PostMapping

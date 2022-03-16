@@ -1,8 +1,6 @@
 package com.example.santanderavaliacaospring.models;
 
-import com.example.santanderavaliacaospring.DTO.RequestInventory;
-import com.example.santanderavaliacaospring.DTO.RequestRebel;
-import com.example.santanderavaliacaospring.DTO.RequestTrade;
+import com.example.santanderavaliacaospring.DTO.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,6 +22,68 @@ public class Resistance {
         });
 
         return result;
+    }
+
+    public static List<Rebel> listTraitors() {
+        List<Rebel> result = new ArrayList<>();
+
+        rebels.forEach(rebel -> {
+            if (rebel.getReports().size() > 2){
+                result.add(rebel);
+            }
+        });
+
+        return result;
+    }
+
+    public ResponseLostPoints getLostPoints(){
+        return new ResponseLostPoints(listTraitors().stream().mapToInt(Rebel::getTotalValue).sum());
+    }
+
+    public static ResponsePercentage percentageOfTraitors() throws Exception {
+        if(listTraitors().size() == 0){
+            throw new Exception("Não há traidores");
+        }
+
+        return new ResponsePercentage(
+                (listTraitors().size() * 100)/(double)Resistance.rebels.size());
+    }
+
+    public static ResponsePercentage percentageOfNonTraitors() {
+        return new ResponsePercentage((listMembers().size() * 100)/(double)Resistance.rebels.size());
+    }
+
+    public ResponseItemsReport itemsReport(){
+        List<Boolean> guns = new ArrayList<>();
+        List<Boolean> ammo = new ArrayList<>();
+        List<Boolean> water = new ArrayList<>();
+        List<Boolean> food = new ArrayList<>();
+
+        listMembers().forEach(member ->{
+            member.getInventory().forEach( item -> {
+                switch (item.getItem().getValue()){
+                    case 4:
+                        guns.add(true);
+                        break;
+                    case 3:
+                        ammo.add(true);
+                        break;
+                    case 2:
+                        water.add(true);
+                        break;
+                    default:
+                        food.add(true);
+                        break;
+                }
+            });
+        });
+
+        return new ResponseItemsReport(
+                (double)guns.size()*100/listMembers().size(),
+                (double)ammo.size()*100/listMembers().size(),
+                (double)water.size()*100/listMembers().size(),
+                (double)food.size()*100/listMembers().size()
+        );
     }
 
     public static Rebel findAnyById(UUID id) throws Exception {

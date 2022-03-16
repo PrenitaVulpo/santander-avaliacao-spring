@@ -1,7 +1,6 @@
 package com.example.santanderavaliacaospring.service;
 
-import com.example.santanderavaliacaospring.DTO.RequestRebel;
-import com.example.santanderavaliacaospring.DTO.RequestReport;
+import com.example.santanderavaliacaospring.DTO.*;
 import com.example.santanderavaliacaospring.SantanderAvaliacaoSpringApplication;
 import com.example.santanderavaliacaospring.models.Item;
 import com.example.santanderavaliacaospring.models.OwnedItem;
@@ -35,6 +34,22 @@ public class RebelService {
             SantanderAvaliacaoSpringApplication.resistance.addRebel(newRebel);
 
         return newRebel;
+    }
+
+    public ResponsePercentage getTraitorPercentage() throws Exception {
+        return SantanderAvaliacaoSpringApplication.resistance.percentageOfTraitors();
+    }
+
+    public ResponsePercentage getNonTraitorPercentage(){
+        return SantanderAvaliacaoSpringApplication.resistance.percentageOfNonTraitors();
+    }
+
+    public ResponseLostPoints getLostPoints(){
+        return SantanderAvaliacaoSpringApplication.resistance.getLostPoints();
+    }
+
+    public ResponseItemsReport getItemsReport(){
+        return SantanderAvaliacaoSpringApplication.resistance.itemsReport();
     }
 
     public List<Rebel> getAllRebels(){
