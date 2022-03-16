@@ -15,6 +15,6 @@ public class RequestTradeParticipant {
     private RequestInventory transactionItems;
 
     public int getTotalValue(){
-        return transactionItems.getItemList().stream().mapToInt(item -> Item.findByMame(item.getItemName()).getValue()).sum();
+        return transactionItems.getItemList().stream().mapToInt(item -> Item.findByMame(item.getItemName()).getValue() * item.getAmount()).sum();
     }
 }

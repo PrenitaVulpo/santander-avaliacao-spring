@@ -194,7 +194,7 @@ public class Resistance {
                 .forEach(rebel -> {
                     rebel.getInventory().forEach(rebelItem -> {
                         newInventory.forEach(newItem ->{
-                            if (newItem.getItem() == rebelItem.getItem()){
+                            if (newItem.getItem().getValue() == rebelItem.getItem().getValue()){
                                 newItem.setAmount(
                                         rebelItem.getAmount() + newItem.getAmount()
                                 );
