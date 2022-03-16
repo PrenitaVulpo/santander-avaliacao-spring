@@ -5,6 +5,7 @@ import com.example.santanderavaliacaospring.DTO.RequestRebel;
 import com.example.santanderavaliacaospring.DTO.RequestTrade;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Resistance {
     private static List<Rebel> rebels = new ArrayList<>();
@@ -68,7 +69,13 @@ public class Resistance {
         return rebelDetails(id);
     }
 
-    public Rebel updateRebelInventory (UUID id, RequestInventory inventory) throws Exception {
+    public void takeFromRebelInventory (UUID id, RequestInventory inventory) throws Exception {
+        Optional<Rebel> owner = Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),id)).findAny();
+
+        if (!hasAllItems(owner.get(), inventory)){
+            throw new Exception("One of the participants does not have all the Itens");
+        }
+
         List<OwnedItem> newInventory = new ArrayList<>();
 
         inventory.getItemList().forEach(item ->{
@@ -79,9 +86,69 @@ public class Resistance {
 
         Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),id))
                 .forEach(rebel -> {
+                    rebel.getInventory().forEach(rebelItem -> {
+                        newInventory.forEach(newItem ->{
+                            if (newItem.getItem() == rebelItem.getItem()){
+                                newItem.setAmount(
+                                        rebelItem.getAmount() - newItem.getAmount()
+                                );
+                            }
+                        });
+                    });
+                });
+
+        Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),id))
+                .forEach(rebel -> {
                     rebel.setInventory(newInventory);
                 });
-        return rebelDetails(id);
+
+
+    }
+
+    public boolean hasAllItems(Rebel rebel, RequestInventory inventory){
+        AtomicBoolean result = new AtomicBoolean(true);
+
+        inventory.getItemList().forEach( item ->{
+            Optional<OwnedItem> checkItem = rebel.getInventory().stream().filter(
+                    ownedItem -> ownedItem.getItem() == Item.findByMame(item.getItemName())
+            ).findAny();
+
+            if(checkItem.isEmpty()){
+                result.set(false);
+            }
+        });
+
+        return result.get();
+    }
+
+    public void addToRebelInventory (UUID id, RequestInventory inventory) {
+        List<OwnedItem> newInventory = new ArrayList<>();
+
+        inventory.getItemList().forEach(item ->{
+            if (Item.contains(item.getItemName())){
+                newInventory.add(new OwnedItem(Item.findByMame(item.getItemName()), item.getAmount()));
+            }
+        });
+
+        Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),id))
+                .forEach(rebel -> {
+                    rebel.getInventory().forEach(rebelItem -> {
+                        newInventory.forEach(newItem ->{
+                            if (newItem.getItem() == rebelItem.getItem()){
+                                newItem.setAmount(
+                                        rebelItem.getAmount() + newItem.getAmount()
+                                );
+                            }
+                        });
+                    });
+                });
+
+        Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),id))
+                .forEach(rebel -> {
+                    rebel.setInventory(newInventory);
+                });
+
+
     }
 
     public void deleteRebel(UUID id) throws Exception{
@@ -125,8 +192,14 @@ public class Resistance {
         if(trade.getRebel1().getTotalValue() != trade.getRebel2().getTotalValue()){
             throw new Exception("The trade can only be made with equal total values");
         } else {
-            updateRebelInventory(trade.getRebel1().getId(), trade.getRebel1().getTransactionItems());
-            updateRebelInventory(trade.getRebel2().getId(), trade.getRebel2().getTransactionItems());
+            Rebel participant1 = rebelDetails(trade.getRebel1().getId());
+            Rebel participant2 = rebelDetails(trade.getRebel2().getId());
+
+            takeFromRebelInventory(participant1.getId(), trade.getRebel1().getTransactionItems());
+            takeFromRebelInventory(participant2.getId(), trade.getRebel2().getTransactionItems());
+
+            addToRebelInventory(participant1.getId(), trade.getRebel2().getTransactionItems());
+            addToRebelInventory(participant2.getId(), trade.getRebel1().getTransactionItems());
         }
     }
 }
