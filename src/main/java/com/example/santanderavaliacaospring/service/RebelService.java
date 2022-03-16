@@ -28,7 +28,6 @@ public class RebelService {
                 requestRebel.getGender(),
                 requestRebel.getLocation(),
                 newRebelInventory,
-                false,
                 new ArrayList<>()
         );
 

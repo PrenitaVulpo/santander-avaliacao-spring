@@ -22,7 +22,7 @@ public class ResponseRebel {
     private RebelLocation location;
     private List<OwnedItem> inventory;
     private boolean isTraitor;
-    private List<String> reports;
+    private List<UUID> reports;
 
     public ResponseRebel(Rebel rebel){
         this.id = rebel.getId();
@@ -31,7 +31,6 @@ public class ResponseRebel {
         this.gender = rebel.getGender();
         this.location = rebel.getLocation();
         this.inventory = rebel.getInventory();
-        this.isTraitor = rebel.isTraitor();
         this.reports = rebel.getReports();
     }
 

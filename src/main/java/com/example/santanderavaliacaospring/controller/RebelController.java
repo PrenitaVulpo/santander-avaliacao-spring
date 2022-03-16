@@ -38,16 +38,6 @@ public class RebelController {
         return ResponseEntity.created(uri).body(new ResponseRebel(rebel));
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseRebel> signNewRebel(
-            @RequestBody @Valid RequestRebel requestRebel,
-            UriComponentsBuilder uriComponentsBuilder
-    ){
-        Rebel rebel = rebelService.addRebel(requestRebel);
-        URI uri = uriComponentsBuilder.path("/rebel/id").buildAndExpand(rebel.getId()).toUri();
-        return ResponseEntity.created(uri).body(new ResponseRebel(rebel));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ResponseRebel> rebelDetails(@PathVariable UUID id)
             throws Exception{
@@ -60,6 +50,15 @@ public class RebelController {
             @RequestBody RequestRebel requestRebel
     ) throws Exception {
         Rebel rebel = SantanderAvaliacaoSpringApplication.resistance.updateRebelData(id, requestRebel);
+        return ResponseEntity.ok(new ResponseRebel(rebel));
+    }
+
+    @PutMapping("/{id}/report")
+    public ResponseEntity<ResponseRebel> reportRebel(
+            @PathVariable UUID id,
+            @RequestBody UUID whistleblowerId
+    ) throws Exception {
+        Rebel rebel = SantanderAvaliacaoSpringApplication.resistance.reportRebel(id, whistleblowerId);
         return ResponseEntity.ok(new ResponseRebel(rebel));
     }
 

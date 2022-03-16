@@ -12,14 +12,22 @@ public class Resistance {
         Resistance.rebels.add(rebel);
     }
 
-    public List<Rebel> listMembers() {
-        return Resistance.rebels;
+    public static List<Rebel> listMembers() {
+        List<Rebel> result = new ArrayList<>();
+
+        rebels.forEach(rebel -> {
+            if (rebel.getReports().size() <= 2){
+                result.add(rebel);
+            }
+        });
+
+        return result;
     }
 
     public Rebel rebelDetails(UUID id) throws Exception {
         Optional<Rebel> resultRebel =
-                Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),id)).findAny();
-        if(resultRebel.isPresent()){
+                Resistance.listMembers().stream().filter(rebel -> Objects.equals(rebel.getId(),id)).findAny();
+        if(resultRebel.isPresent() && resultRebel.get().getReports().size() <= 2){
             return resultRebel.get();
         } else {
             throw new Exception("Rebel not found");
@@ -70,7 +78,7 @@ public class Resistance {
         Resistance.rebels.remove(rebel);
     }
 
-    public void reportRebel(UUID traitorId, UUID whistleblowerId) throws Exception {
+    public Rebel reportRebel(UUID traitorId, UUID whistleblowerId) throws Exception {
         Optional<Rebel> resultWhistleblower =
                 Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),whistleblowerId)).findAny();
         if(!resultWhistleblower.isPresent()){
@@ -92,7 +100,11 @@ public class Resistance {
                             resultTraitor.get().getInventory(),
                             newList
                     )
-                    );
+            );
+
+            resultTraitor.get().setReports(newList);
+
+            return resultTraitor.get();
         } else {
             throw new Exception("Traitor not found");
         }
