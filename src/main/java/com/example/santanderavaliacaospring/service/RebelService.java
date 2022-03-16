@@ -1,6 +1,7 @@
 package com.example.santanderavaliacaospring.service;
 
 import com.example.santanderavaliacaospring.DTO.RequestRebel;
+import com.example.santanderavaliacaospring.DTO.RequestReport;
 import com.example.santanderavaliacaospring.SantanderAvaliacaoSpringApplication;
 import com.example.santanderavaliacaospring.models.Item;
 import com.example.santanderavaliacaospring.models.OwnedItem;
@@ -46,5 +47,9 @@ public class RebelService {
 
     public Rebel updateRebel(UUID id, RequestRebel requestRebel) throws Exception{
         return SantanderAvaliacaoSpringApplication.resistance.updateRebelData(id, requestRebel);
+    }
+
+    public Rebel reportRebel(UUID traitorId, RequestReport requestReport) throws Exception{
+        return SantanderAvaliacaoSpringApplication.resistance.reportRebel(traitorId, requestReport.getWhistleblowerId());
     }
 }

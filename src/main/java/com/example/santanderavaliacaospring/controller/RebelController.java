@@ -44,7 +44,7 @@ public class RebelController {
             @PathVariable UUID id,
             @RequestBody RequestReport requestReport
     ) throws Exception {
-        Rebel rebel = SantanderAvaliacaoSpringApplication.resistance.reportRebel(id, requestReport.getWhistleblowerId());
+        Rebel rebel = rebelService.reportRebel(id, requestReport);
         return ResponseEntity.ok(new ResponseRebel(rebel));
     }
 

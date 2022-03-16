@@ -95,8 +95,6 @@ public class Resistance {
             throw new Exception("Whistleblower not found");
         }
 
-
-        int traitorIndex;
         Optional<Rebel> resultTraitor =
                 Resistance.rebels.stream().filter(rebel -> Objects.equals(rebel.getId(),traitorId)).findAny();
         if(resultTraitor.isPresent()){
