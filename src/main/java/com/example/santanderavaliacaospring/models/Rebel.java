@@ -17,4 +17,5 @@ public class Rebel {
     private RebelLocation location;
     private List<OwnedItem> inventory;
     private List<UUID> reports;
+
 }

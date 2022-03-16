@@ -32,7 +32,7 @@ public class RebelService {
                 new ArrayList<>()
         );
 
-        SantanderAvaliacaoSpringApplication.resistance.addRebel(newRebel);
+            SantanderAvaliacaoSpringApplication.resistance.addRebel(newRebel);
 
         return newRebel;
     }

@@ -2,6 +2,7 @@ package com.example.santanderavaliacaospring.models;
 
 import com.example.santanderavaliacaospring.DTO.RequestInventory;
 import com.example.santanderavaliacaospring.DTO.RequestRebel;
+import com.example.santanderavaliacaospring.DTO.RequestTrade;
 
 import java.util.*;
 
@@ -117,6 +118,15 @@ public class Resistance {
             return resultTraitor.get();
         } else {
             throw new Exception("Traitor not found");
+        }
+    }
+
+    public void trade(RequestTrade trade) throws Exception{
+        if(trade.getRebel1().getTotalValue() != trade.getRebel2().getTotalValue()){
+            throw new Exception("The trade can only be made with equal total values");
+        } else {
+            updateRebelInventory(trade.getRebel1().getId(), trade.getRebel1().getTransactionItems());
+            updateRebelInventory(trade.getRebel2().getId(), trade.getRebel2().getTransactionItems());
         }
     }
 }

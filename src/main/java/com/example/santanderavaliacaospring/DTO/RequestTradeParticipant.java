@@ -1,10 +1,10 @@
 package com.example.santanderavaliacaospring.DTO;
 
+import com.example.santanderavaliacaospring.models.Item;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -12,5 +12,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RequestTradeParticipant {
     private UUID id;
-    private List<RequestInventory> itemList;
+    private RequestInventory transactionItems;
+
+    public int getTotalValue(){
+        return transactionItems.getItemList().stream().mapToInt(item -> Item.findByMame(item.getItemName()).getValue()).sum();
+    }
 }
