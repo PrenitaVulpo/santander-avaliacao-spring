@@ -7,6 +7,8 @@ import lombok.Setter;
 import java.util.List;
 import java.util.UUID;
 
+//ignore esse comentário
+
 @Getter @Setter
 @AllArgsConstructor
 public class Rebel {
