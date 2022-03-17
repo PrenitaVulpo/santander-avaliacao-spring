@@ -19,7 +19,7 @@ public class Rebel {
     private List<UUID> reports;
 
     public int getTotalValue(){
-        return inventory.stream().mapToInt(item -> item.getItem().getValue()).sum();
+        return inventory.stream().mapToInt(item -> item.getItem().getValue() * item.getAmount()).sum();
     }
 
 }
